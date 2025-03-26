@@ -10,7 +10,7 @@ from database import db
 
 routes = Blueprint('routes', __name__)
 
-# ✅ تسجيل مستخدم جديد مع 2FA
+
 @routes.route('/signup', methods=['POST'])
 def signup():
     data = request.get_json()
@@ -23,7 +23,7 @@ def signup():
 
     return jsonify({'message': 'User registered successfully', '2FA_secret': twofa_secret}), 201
 
-# ✅ إنشاء QR Code لـ Google Authenticator
+
 @routes.route('/generate_qr/<username>', methods=['GET'])
 def generate_qr(username):
     user = User.query.filter_by(username=username).first()
@@ -39,7 +39,7 @@ def generate_qr(username):
 
     return jsonify({'qr_code': encoded_img})
 
-# ✅ تسجيل الدخول مع 2FA (الخطوة الأولى)
+
 @routes.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
@@ -50,7 +50,7 @@ def login():
 
     return jsonify({'message': 'Enter 2FA code'}), 200
 
-# ✅ التحقق من 2FA وإصدار Access Token
+
 @routes.route('/verify-2fa', methods=['POST'])
 def verify_2fa():
     data = request.get_json()
@@ -73,7 +73,7 @@ from flask import request
 @routes.route('/product', methods=['POST'])
 def add_product():
     data = request.json
-    print(data)  # ✅ أضف هذا لفحص البيانات المستلمة
+    print(data)  
     
     pname = data.get("pname")
     description = data.get("description")
@@ -84,9 +84,9 @@ def add_product():
         return {"msg": "pname must be a string"}, 400
     if description is not None and not isinstance(description, str):
         return {"msg": "description must be a string"}, 400
-    if not isinstance(price, (float, int)):  # ✅ تأكد من أن price رقم وليس نص
+    if not isinstance(price, (float, int)):  
         return {"msg": "price must be a number"}, 400
-    if not isinstance(stock, int):  # ✅ تأكد من أن stock رقم صحيح وليس نص
+    if not isinstance(stock, int):  
         return {"msg": "stock must be an integer"}, 400
 
     new_product = Product(pname=pname, description=description, price=price, stock=stock)
@@ -102,7 +102,7 @@ def add_product():
 # get products
 
 @routes.route('/product', methods=['GET'])
-# @jwt_required()  # التحقق من JWT
+
 def get_products():
     products = Product.query.all()
 
@@ -114,7 +114,7 @@ def get_products():
         for p in products
     ]
 
-    print(product_list)  # ✅ تأكد مما يتم إرجاعه قبل الإرسال
+    print(product_list) 
 
     return jsonify({'products': product_list}), 200
 
@@ -129,7 +129,7 @@ def update_product(product_id):
 
     data = request.get_json()
     
-    # تحديث الحقول إذا كانت موجودة في الطلب
+    
     if 'pname' in data:
         product.pname = data['pname']
     if 'description' in data:
@@ -139,7 +139,7 @@ def update_product(product_id):
     if 'stock' in data:
         product.stock = data['stock']
 
-    # حفظ التعديلات
+    
     db.session.commit()
 
     return jsonify({
